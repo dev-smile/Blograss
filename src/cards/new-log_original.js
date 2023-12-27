@@ -1,4 +1,4 @@
-import { koCheck, replaceAll } from "../utils/index.js";
+import { koCheck, escapeHtml, replaceAll } from "../utils/index.js";
 
 const createCardTitle = (username, likes) => {
   const likeX = likes > 99 ? 365 : likes > 9 ? 370 : 380;
@@ -7,7 +7,7 @@ const createCardTitle = (username, likes) => {
         <g transform="translate(0, 0)">
                 <text x="0" y="0" class="header" data-testid="header">${username}.log</text>
                 <svg width="30" x="390" y="-10" height="13" viewBox="0 0 30 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M11.25 0L7.5 2.26044L3.75 0L0 2.82555V6.78133L7.5 12.4324L15 6.78133V2.82555L11.25 0Z" fill="#20c997"/>
+                    <path d="M11.25 0L7.5 2.26044L3.75 0L0 2.82555V6.78133L7.5 12.4324L15 6.78133V2.82555L11.25 0Z" fill="black"/>
                 </svg>
                 <text x="${likeX}" class="heart-count" data-testid="heart-count">${likes}</text>
             </g>
@@ -48,7 +48,7 @@ const createCardBottom = ({ tags }) => {
               return `
                         <svg data-testid="lang-items" x="${pos}" width="${size}" viewBox="0 0 ${size} 19">
                             <g style="position: relative;">
-                                <rect width="${size}" height="19.5367" rx="9.76834" fill="#44474B"/>
+                                <rect width="${size}" height="19.5367" rx="9.76834" fill="#F1F3F5"/>
                                 <text data-testid="lang-name" text-anchor="middle" x="${
                                   size / 2
                                 }" y="13" class="tag-item">${element}</text>
@@ -64,20 +64,20 @@ const cardStyle = `
     <style>
         .header {
             font: bold 14px 'Segoe UI', Ubuntu, Sans-Serif;
-            fill: #20c997;
+            fill: #343A40;
             animation: fadeInAnimation 0.8s ease-in-out forwards;
         }
-        .log-title { font: bold 14px 'Segoe UI', Ubuntu, Sans-Serif; fill: white }
-        .log-description { font-size: 12px; fill: white}
-        .tag-item { font-size: 12px; fill: #BCBCBC;}
-        .heart-count { font-size: 12px; fill: #20c997;}
+        .log-title { font: bold 14px 'Segoe UI', Ubuntu, Sans-Serif; fill: #212529 }
+        .log-description { font-size: 12px; fill: #495057}
+        .tag-item { font-size: 12px; fill: #0CA678;}
+        .heart-count { font-size: 12px; fill: #495057;}
     </style>
 `;
-const createCardDark = (data) => {
+const createCard = (data) => {
   return `
         <svg xmlns="http://www.w3.org/2000/svg" width="450" height="130" viewBox="0 0 450 130" fill="none">
             ${cardStyle}
-            <rect data-testid="card-bg" x="0.5" y="0.5" rx="4.5" height="99%" stroke="#30363d" width="449" fill="#24292e" stroke-opacity="1"/>
+            <rect data-testid="card-bg" x="0.5" y="0.5" rx="4.5" height="99%" stroke="#e4e2e2" width="449" fill="#fffefe" stroke-opacity="1"/>
             ${createCardTitle(data.user.username, data.likes)}
             ${createCardBody(data)}
             ${createCardBottom(data)}
@@ -85,4 +85,4 @@ const createCardDark = (data) => {
     `;
 };
 
-export default createCardDark;
+export default createCard;
