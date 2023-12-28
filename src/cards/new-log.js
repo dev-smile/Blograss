@@ -1,94 +1,3 @@
-// import { koCheck, escapeHtml, replaceAll } from "../utils/index.js";
-
-// const createCardTitle = (username, likes) => {
-//   const likeX = likes > 99 ? 365 : likes > 9 ? 370 : 380;
-//   return `
-//         <g data-testid="card-title" transform="translate(25, 35)">
-//         <g transform="translate(0, 0)">
-//                 <text x="0" y="0" class="header" data-testid="header">${username}.log</text>
-//                 <svg width="30" x="390" y="-10" height="13" viewBox="0 0 30 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-//                     <path d="M11.25 0L7.5 2.26044L3.75 0L0 2.82555V6.78133L7.5 12.4324L15 6.78133V2.82555L11.25 0Z" fill="black"/>
-//                 </svg>
-//                 <text x="${likeX}" class="heart-count" data-testid="heart-count">${likes}</text>
-//             </g>
-//         </g>
-//     `;
-// };
-
-// const createCardBody = ({ title, short_description }) => {
-//   return `
-//         <g data-testid="main-card-body" transform="translate(0, 45)">
-//         <svg data-testid="lang-items" x="25" width="400" height="40" viewBox="0 0 400 40">
-//             <g transform="translate(0, 0)">
-//                 <text data-testid="lang-name" x="2" y="15" class="log-title">${escapeHtml(
-//                   title
-//                 )}</text>
-//                 <text ata-testid="lang-description" x="2" y="35" class="log-description">${escapeHtml(
-//                   short_description
-//                 )}</text>
-//             </g>
-//         </svg>
-//         </g>
-//     `;
-// };
-
-// const createCardBottom = ({ tags }) => {
-//   let prev = 25;
-//   return `
-//         <g data-testid="main-card-bottom" transform="translate(0, 40)">
-//             ${tags.map((element) => {
-//               const text = replaceAll(element, " ", "");
-//               const blakSize = element.length - text.length;
-//               const size =
-//                 (koCheck(text) ? text.length * 12 + 12 : text.length * 9 + 5) +
-//                 blakSize * 2;
-//               const pos = prev;
-//               if (prev + size > 400) return;
-//               else prev += size + 5;
-//               return `
-//                         <svg data-testid="lang-items" x="${pos}" width="${size}" viewBox="0 0 ${size} 19">
-//                             <g style="position: relative;">
-//                                 <rect width="${size}" height="19.5367" rx="9.76834" fill="#F1F3F5"/>
-//                                 <text data-testid="lang-name" text-anchor="middle" x="${
-//                                   size / 2
-//                                 }" y="13" class="tag-item">${element}</text>
-//                             </g>
-//                         </svg>
-//                     `;
-//             })}
-//         </g>
-//     `;
-// };
-
-// const cardStyle = `
-//     <style>
-//         .header {
-//             font: bold 14px 'Segoe UI', Ubuntu, Sans-Serif;
-//             fill: #343A40;
-//             animation: fadeInAnimation 0.8s ease-in-out forwards;
-//         }
-//         .log-title { font: bold 14px 'Segoe UI', Ubuntu, Sans-Serif; fill: #212529 }
-//         .log-description { font-size: 12px; fill: #495057}
-//         .tag-item { font-size: 12px; fill: #0CA678;}
-//         .heart-count { font-size: 12px; fill: #495057;}
-//     </style>
-// `;
-// const createCard = (data) => {
-//   return `
-//         <svg xmlns="http://www.w3.org/2000/svg" width="450" height="130" viewBox="0 0 450 130" fill="none">
-//             ${cardStyle}
-//             <rect data-testid="card-bg" x="0.5" y="0.5" rx="4.5" height="99%" stroke="#e4e2e2" width="449" fill="#fffefe" stroke-opacity="1"/>
-//             ${createCardTitle(data.user.username, data.likes)}
-//             ${createCardBody(data)}
-//             ${createCardBottom(data)}
-//         </svg>
-//     `;
-// };
-
-// export default createCard;
-
-import { escapeHtml } from "../utils/index.js";
-
 // https://velog.io/@dev-smile/posts
 
 const createLatestCardTitle = (username) => {
@@ -103,7 +12,7 @@ const createLatestCardTitle = (username) => {
     `;
 };
 
-const createLatestCardBody = () => {
+const createLatestCardBody = (total_at) => {
   const months = [
     "Jan",
     "Feb",
@@ -128,7 +37,7 @@ const createLatestCardBody = () => {
     .map(
       (month, index) => `
       <text x="${
-        20 + currentX + index * 70
+        30 + currentX + index * 70
       }" y="50" class="month-label">${month}</text>
   `
     )
@@ -149,10 +58,25 @@ const createLatestCardBody = () => {
       let monthDays = Array.from(
         { length: daysInMonth[monthIndex] },
         (_, i) => {
+          let writing = "";
+          let year = "2023";
+          const search_month = `${monthIndex + 1}`.padStart(2, "0");
+          const search_day = `${i + 1}`.padStart(2, "0");
+
+          // if date is in total_at, then writing = "writing"
+          if (total_at.includes(`${year}-${search_month}-${search_day}`)) {
+            console.log(
+              "date :",
+              `${year}-${search_month}-${search_day}`,
+              total_at.includes(`${year}-${search_month}-${search_day}`)
+            );
+            writing = "writing";
+          }
+
           let rect = `
-          <rect x="${currentX}" y="${
+          <rect x="${currentX + 5}" y="${
             5 + currentY + (dayCounter % 7) * 20
-          }" width="10" height="10" class="day"/>
+          }" width="10" height="10" class="day ${writing}"/>
       `;
           dayCounter++;
           if (dayCounter % 7 === 0) currentX += 15;
@@ -167,7 +91,7 @@ const createLatestCardBody = () => {
 
   return `
     <g data-testid="main-card-body" >
-        <svg data-testid="contribution-chart" x="25"  >
+        <svg data-testid="contribution-chart" x="15"  >
             <g transform="translate(0, 0)">
                 ${monthLabels}
                 ${dayLabels}
@@ -187,18 +111,34 @@ const latestCardStyle = `
         }
         .month-label { font-size: 12px; fill: #343A40; }
         .day-label { font-size: 12px; fill: #343A40; }
+        .writing {fill:#20C997 !important;}
         rect.day { fill: #ebedf0; stroke: #ebedf0; }
     </style>
 `;
 
-const createLatestCard = (data) => {
-  console.log("최근 글 ", data);
+const createLatestCard = (name, data) => {
+  //   console.log("최근 글 ", data);
+  //   console.log("최근 글 갯수 ", data.posts.length);
+  // get posts released_at, updated_at list
+  const posts = data.posts;
+  const released_at = posts.map((post) => post.released_at);
+  const updated_at = posts.map((post) => post.updated_at);
+  //   console.log("released_at ", released_at);
+  //   console.log("updated_at ", updated_at);
+  let total_at = [];
+  total_at = released_at.concat(updated_at);
+  console.log("total_at ", total_at);
+  // total_at의 T 이하 문자열 제거
+  total_at = total_at.map((date) => date.split("T")[0]);
+  // 중복 제거
+  total_at = [...new Set(total_at)];
+
   return `
         <svg xmlns="http://www.w3.org/2000/svg" width="900" height="210" viewBox="0 0 900 210" fill="none">
             ${latestCardStyle}
             <rect data-testid="card-bg" x="0.5" y="0.5" rx="4.5" height="99%" stroke="#e4e2e2" width="899" fill="#fffefe" stroke-opacity="1"/>
-            ${createLatestCardTitle(data.user.username)}
-            ${createLatestCardBody()}
+            ${createLatestCardTitle(name)}
+            ${createLatestCardBody(total_at)}
         </svg>
     `;
 };

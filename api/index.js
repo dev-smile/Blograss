@@ -1,6 +1,6 @@
 import createCard from "../src/cards/new-log.js";
 import createCardDark from "../src/cards/new-log-black.js";
-import fetchPost from "../src/fetchers/post-fetcher.js";
+import fetchPosts from "../src/fetchers/posts-fetcher.js";
 import fetchReadPost from "../src/fetchers/readpost-fetcher.js";
 
 export default async (req, res) => {
@@ -8,9 +8,12 @@ export default async (req, res) => {
   res.setHeader("Content-Type", "image/svg+xml");
   try {
     const post = !slug
-      ? await fetchPost(name, tag)
+      ? await fetchPosts(name)
       : await fetchReadPost(name, slug);
-    return res.send(color === "dark" ? createCardDark(post) : createCard(post));
+    console.log("[index.js] post :", post);
+    return res.send(
+      color === "dark" ? createCardDark(post) : createCard(name, post)
+    );
   } catch (e) {
     return res.send(e.message);
   }
