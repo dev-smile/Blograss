@@ -89,11 +89,15 @@
 
 import { escapeHtml } from "../utils/index.js";
 
+// https://velog.io/@dev-smile/posts
+
 const createLatestCardTitle = (username) => {
   return `
     <g data-testid="card-title" transform="translate(25, 22)">
         <g transform="translate(0, 0)">
-          <text x="0" y="0" class="header" data-testid="header">${username}.log 's grass</text>
+            <a href="https://velog.io/@${username}/posts">
+                <text x="0" y="0" class="header" data-testid="header">${username}.log 's grass</text>
+            </a>
         </g>
     </g>
     `;
