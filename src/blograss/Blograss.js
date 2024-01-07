@@ -264,8 +264,8 @@ const latestCardStyle = `
         }
         .month-label { font-size: 12px; fill: #343A40; }
         .day-label { font-size: 12px; fill: #343A40; }
-        .writing { font-size: 12px; fill:#20C997; }
-        rect.day { fill: #cae3db; stroke: #ebedf0; }
+        .writing { font-size: 12px; fill:#20C997; stroke: #20C997; }
+        rect.day { fill: #cae3db; stroke: #cae3db; }
     </style>
 `;
 
