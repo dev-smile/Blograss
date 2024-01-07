@@ -27,7 +27,7 @@ const createBlograssCardTitle = (username, type, year) => {
   // } else {
   //   title_text = `🌱 ${username} ${year}년 ${type_text} Grass`;
   // }
-  const title_text = `🌱 Velog ${username} ${year}년 ${type_text} Grass`;
+  const title_text = `🌱 ${year}년 Velog ${username} ${type_text} Grass`;
 
   return `
     <g data-testid="card-title" transform="translate(25, 22)">
