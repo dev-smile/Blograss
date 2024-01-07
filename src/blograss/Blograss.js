@@ -12,25 +12,35 @@ const MONTH_GAP = 4; // 월간 공백
 
 const WEEK_DEFAULT_VERTICAL_BLANK = 15; // 주 기본 수직 공백
 
-const createBlograssCardTitle = (username, type) => {
+const createBlograssCardTitle = (username, type, year) => {
   let type_text = "";
   if (type === "daily" || !type) {
     type_text = "Daily";
   } else if (type === "weekly") {
     type_text = "Weekly";
   }
+  // let title_text = "";
+  // const today = new Date();
+  // const this_year = today.getFullYear();
+  // if (year === this_year) {
+  //   title_text = `🌱 ${username} ${type_text} Grass`;
+  // } else {
+  //   title_text = `🌱 ${username} ${year}년 ${type_text} Grass`;
+  // }
+  const title_text = `🌱 Velog ${username} ${year}년 ${type_text} Grass`;
+
   return `
     <g data-testid="card-title" transform="translate(25, 22)">
         <g transform="translate(0, 0)">
             <a href="https://velog.io/@${username}/posts">
-                <text x="0" y="0" class="header" data-testid="header">🌱 ${username}.log Velog ${type_text} Grass</text>
+                <text x="0" y="0" class="header" data-testid="header">${title_text}</text>
             </a>
         </g>
     </g>
     `;
 };
 
-const createDailyGrass = (total_at) => {
+const createDailyGrass = (total_at, year) => {
   const months = [
     "Jan",
     "Feb",
@@ -82,7 +92,7 @@ const createDailyGrass = (total_at) => {
         { length: daysInMonth[monthIndex] },
         (_, i) => {
           let writing = "day";
-          let year = "2023";
+          // let year = "2023";
           const search_month = `${monthIndex + 1}`.padStart(2, "0");
           const search_day = `${i + 1}`.padStart(2, "0");
 
@@ -130,12 +140,13 @@ const createDailyGrass = (total_at) => {
   `;
 };
 
-const createWeeklyGrass = (total_at) => {
+const createWeeklyGrass = (total_at, year) => {
   // Show 52 weeks to 13*4 array
   let currentX = 25;
   let currentY = 55;
   let dayCounter = 0;
-  let year = "2023";
+  // let year = "2023";
+  console.log("year :", year);
 
   let weekLabels = Array.from({ length: 13 }, (_, i) => {
     return `
@@ -164,53 +175,28 @@ const createWeeklyGrass = (total_at) => {
   };
 
   // let weekly_posts is 52 list
-  let weekly_posts = Array.from({ length: 52 }, () => []);
+  let weekly_posts = Array.from({ length: 53 }, () => []);
   for (let k = 0; k < total_at.length; k++) {
     let date_split = total_at[k].split("-");
     let post_year = date_split[0];
-    if (post_year !== year) {
+    console.log("post_year :", post_year);
+    if (post_year !== String(year)) {
       continue;
     }
     let post_month = date_split[1];
     let post_day = date_split[2];
 
     let d = new Date(post_year, post_month - 1, post_day);
-
-    weekly_posts[d.getWeek() - 1].push(total_at[k]);
+    console.log("d :", d);
+    console.log("d.getWeek()-1 :", d.getWeek());
+    weekly_posts[d.getWeek()].push(total_at[k]);
   }
+  console.log("weekly_posts :", weekly_posts);
 
   let days = Array.from({ length: 13 }, (_, i) => {
     return Array.from({ length: 4 }, (_, j) => {
       let writing = "day";
-      const search_month = `${i + 1}`.padStart(2, "0");
-      const search_day = `${j + 1}`.padStart(2, "0");
 
-      // total_at.map((date) => {
-      //   let date_split = date.split("-");
-      //   let year = date_split[0];
-      //   let month = date_split[1];
-      //   let day = date_split[2];
-
-      //   let d = new Date(year, month - 1, day);
-
-      //   // console.log("d :", d);
-      //   // console.log("d.getWeek() :", d.getWeek());
-      //   // console.log("d.getWeek() - 1 :", d.getWeek() - 1);
-      //   // console.log(
-      //   //   "weekly_posts[d.getWeek() - 1] :",
-      //   //   weekly_posts[d.getWeek() - 1]
-      //   // );
-      //   weekly_posts[d.getWeek() - 1].push(date);
-      // });
-
-      // if (total_at.includes(`${year}-${search_month}-${search_day}`)) {
-      //   // console.log(
-      //   //   "date :",
-      //   //   `${year}-${search_month}-${search_day}`,
-      //   //   total_at.includes(`${year}-${search_month}-${search_day}`)
-      //   // );
-      //   writing = "writing";
-      // }
       if (weekly_posts[i * 4 + j].length > 0) {
         writing = "writing";
       }
@@ -247,11 +233,11 @@ const createWeeklyGrass = (total_at) => {
   `;
 };
 
-const createBlograssCardBody = (total_at, type) => {
+const createBlograssCardBody = (total_at, type, year) => {
   if (type === "daily" || !type) {
-    return createDailyGrass(total_at);
+    return createDailyGrass(total_at, year);
   } else if (type === "weekly") {
-    return createWeeklyGrass(total_at);
+    return createWeeklyGrass(total_at, year);
   }
 };
 
@@ -269,7 +255,7 @@ const latestCardStyle = `
     </style>
 `;
 
-const createBlograssCard = (name, type, data) => {
+const createBlograssCard = (name, type, year, data) => {
   // 발행일, 수정일 색 구분하여 표시해도 좋을 것 같다.
 
   // console.log("최근 글 ", data);
@@ -288,6 +274,7 @@ const createBlograssCard = (name, type, data) => {
 
   // 중복 제거
   total_at = [...new Set(total_at)];
+  console.log("total_at :", total_at);
 
   // 테두리 크기 조정
   let width = 0;
@@ -296,8 +283,17 @@ const createBlograssCard = (name, type, data) => {
     width = 900;
     height = 170;
   } else if (type === "weekly") {
-    width = 270;
+    width = 300;
     height = 130;
+  }
+
+  const today = new Date();
+  const this_year = today.getFullYear();
+  let year_check = year;
+  if (year_check === this_year || !year_check) {
+    year_check = this_year;
+  } else {
+    year_check = parseInt(year_check);
   }
 
   return `
@@ -306,8 +302,8 @@ const createBlograssCard = (name, type, data) => {
             <rect data-testid="card-bg" x="0.5" y="0.5" rx="4.5" height="99%" stroke="#e4e2e2" width="${
               width - 1
             }" fill="#fffefe" stroke-opacity="1"/>
-            ${createBlograssCardTitle(name, type)}
-            ${createBlograssCardBody(total_at, type)}
+            ${createBlograssCardTitle(name, type, year_check)}
+            ${createBlograssCardBody(total_at, type, year_check)}
         </svg>
     `;
 };
