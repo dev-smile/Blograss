@@ -152,8 +152,8 @@ const createWeeklyGrass = (total_at, year) => {
     return `
         <text x="${
           i < 9
-            ? 7 + currentX + i * GRASS_HORIZONTAL_INTERVAL
-            : 5 + currentX + i * GRASS_HORIZONTAL_INTERVAL
+            ? 27 + currentX + i * GRASS_HORIZONTAL_INTERVAL
+            : 25 + currentX + i * GRASS_HORIZONTAL_INTERVAL
           // 7 + currentX + i * (i < 9 ? GRASS_VERTICAL_INTERVAL : 14)
         }" y="50" class="month-label">${i + 1}</text>
     `;
@@ -161,9 +161,9 @@ const createWeeklyGrass = (total_at, year) => {
 
   let dayLabels = Array.from({ length: 4 }, (_, i) => {
     return `
-        <text x="10" y="${
+        <text x="30" y="${
           MONTH_DEFAULT_VERTICAL_BLANK + currentY + i * GRASS_VERTICAL_INTERVAL
-        }" class="day-label">${i + 1}</text>
+        }" class="day-label" text-anchor="middle">${i + 1}</text>
     `;
   }).join("");
 
@@ -203,11 +203,7 @@ const createWeeklyGrass = (total_at, year) => {
 
       let rect = `
         <rect 
-          x="${
-            GRASS_DEFAULT_HORIZONTAL_BLANK +
-            currentX +
-            i * GRASS_HORIZONTAL_INTERVAL
-          }" 
+          x="${25 + currentX + i * GRASS_HORIZONTAL_INTERVAL}" 
           y="${
             GRASS_DEFAULT_VERTICAL_BLANK +
             currentY +
@@ -241,7 +237,7 @@ const createBlograssCardBody = (total_at, type, year) => {
   }
 };
 
-const latestCardStyle = `
+const BlograssStyle = `
     <style>
         .header {
             font: bold 14px 'Segoe UI', Ubuntu, Sans-Serif;
@@ -298,7 +294,7 @@ const createBlograssCard = (name, type, year, data) => {
 
   return `
         <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" fill="none">
-            ${latestCardStyle}
+            ${BlograssStyle}
             <rect data-testid="card-bg" x="0.5" y="0.5" rx="4.5" height="99%" stroke="#e4e2e2" width="${
               width - 1
             }" fill="#fffefe" stroke-opacity="1"/>
