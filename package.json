@@ -1,7 +1,7 @@
 {
-  "name": "velog-readme-stats",
+  "name": "blograss",
   "version": "1.0.0",
-  "description": "당신의 Velog 상태를 깃허브에서 확인하세요.",
+  "description": "블로그 글로 잔디를 심어보자!",
   "main": "./api/index.js",
   "scripts": {
     "start": "node ./api/index.js",
@@ -11,10 +11,9 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@napi-rs/canvas": "^0.1.44",
     "axios": "^1.5.1",
     "graphql-request": "^6.1.0"
   },
   "type": "module",
-  "devDependencies": {} 
+  "devDependencies": {}
 }
