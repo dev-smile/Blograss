@@ -1,16 +1,29 @@
-// https://velog.io/@dev-smile/posts
-const GRASS_DEFAULT_VERTICAL_BLANK = 5; // 잔디 기본 수직 공백
-const GRASS_VERTICAL_INTERVAL = 15; // 잔디 수직 간격
+// 공백 및 간격을 위한 상수
 
-const GRASS_DEFAULT_HORIZONTAL_BLANK = 5; // 잔디 기본 수평 공백
+// 공통
+const START_X = 25; // 시작 x 좌표
+const START_Y = 55; // 시작 y 좌표
+
+const GRASS_VERTICAL_INTERVAL = 15; // 잔디 수직 간격
 const GRASS_HORIZONTAL_INTERVAL = 15; // 잔디 수평 간격
 
-const MONTH_DEFAULT_VERTICAL_BLANK = 15; // 월 기본 수직 공백
-const MONTH_DEFAULT_HORIZONTAL_BLANK = 30; // 월 기본 수평 공백
-const MONTH_HORIZONTAL_INTERVAL = 70; // 월간 간격
-const MONTH_GAP = 4; // 월간 공백
+const LEFT_LABEL_DEFAULT_VERTICAL_BLANK = 15; // 왼쪽 라벨 기본 수직 공백
 
-const WEEK_DEFAULT_VERTICAL_BLANK = 15; // 주 기본 수직 공백
+// 일 별 잔디
+const DAILY_CARD_WIDTH = 900; // 카드 너비
+const DAILY_CARD_HEIGHT = 170; // 카드 높이
+const GRASS_DAILY_DEFAULT_VERTICAL_BLANK = 5; // 일 별 잔디 기본 수직 공백
+const GRASS_DAILY_DEFAULT_HORIZONTAL_BLANK = 5; // 일 별 잔디 기본 수평 공백
+
+const MONTH_LABEL_DEFAULT_HORIZONTAL_BLANK = 30; // 월 라벨 기본 수평 공백
+const MONTH_LABEL_HORIZONTAL_INTERVAL = 70; // 월 라벨 간격
+const MONTH_LABEL_GAP = 4; // 월 라벨 공백
+
+// 주 별 잔디
+const WEEKLY_CARD_WIDTH = 300; // 카드 너비
+const WEEKLY_CARD_HEIGHT = 130; // 카드 높이
+const WEEK_LABEL_UNDER_10_BLANK = 27; // 주 라벨 10 미만 수평 공백
+const WEEK_LABEL_OVER_10_BLANK = 25; // 주 라벨 10 이상 수평 공백 (2자리 숫자로 간격이 달라짐)
 
 const createBlograssCardTitle = (username, type, year) => {
   let type_text = "";
@@ -19,14 +32,6 @@ const createBlograssCardTitle = (username, type, year) => {
   } else if (type === "weekly") {
     type_text = "Weekly";
   }
-  // let title_text = "";
-  // const today = new Date();
-  // const this_year = today.getFullYear();
-  // if (year === this_year) {
-  //   title_text = `🌱 ${username} ${type_text} Grass`;
-  // } else {
-  //   title_text = `🌱 ${username} ${year}년 ${type_text} Grass`;
-  // }
   const title_text = `🌱 ${year}년 Velog ${username} ${type_text} Grass`;
 
   return `
@@ -57,19 +62,19 @@ const createDailyGrass = (total_at, year) => {
   ];
   const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  // 윤년 추가 필요
-  let currentX = 25;
-  let currentY = 55;
+
+  let currentX = START_X;
+  let currentY = START_Y;
   let dayCounter = 0;
 
   let monthLabels = months
     .map(
       (month, index) => `
       <text x="${
-        MONTH_DEFAULT_HORIZONTAL_BLANK +
+        MONTH_LABEL_DEFAULT_HORIZONTAL_BLANK +
         currentX +
-        index * MONTH_HORIZONTAL_INTERVAL
-      }" y="50" class="month-label">${month}</text>
+        index * MONTH_LABEL_HORIZONTAL_INTERVAL
+      }" y="50" class="left-label">${month}</text>
   `
     )
     .join("");
@@ -78,7 +83,7 @@ const createDailyGrass = (total_at, year) => {
     .map(
       (day, index) => `
       <text x="0" y="${
-        MONTH_DEFAULT_VERTICAL_BLANK +
+        LEFT_LABEL_DEFAULT_VERTICAL_BLANK +
         currentY +
         index * GRASS_VERTICAL_INTERVAL
       }" class="day-label">${day}</text>
@@ -92,24 +97,18 @@ const createDailyGrass = (total_at, year) => {
         { length: daysInMonth[monthIndex] },
         (_, i) => {
           let writing = "day";
-          // let year = "2023";
           const search_month = `${monthIndex + 1}`.padStart(2, "0");
           const search_day = `${i + 1}`.padStart(2, "0");
 
           if (total_at.includes(`${year}-${search_month}-${search_day}`)) {
-            // console.log(
-            //   "date :",
-            //   `${year}-${search_month}-${search_day}`,
-            //   total_at.includes(`${year}-${search_month}-${search_day}`)
-            // );
             writing = "writing";
           }
 
           let rect = `
           <rect 
-            x="${GRASS_DEFAULT_HORIZONTAL_BLANK + currentX}" 
+            x="${GRASS_DAILY_DEFAULT_HORIZONTAL_BLANK + currentX}" 
             y="${
-              GRASS_DEFAULT_VERTICAL_BLANK +
+              GRASS_DAILY_DEFAULT_VERTICAL_BLANK +
               currentY +
               (dayCounter % 7) * GRASS_VERTICAL_INTERVAL
             }" 
@@ -122,7 +121,7 @@ const createDailyGrass = (total_at, year) => {
         }
       ).join("");
 
-      currentX += MONTH_GAP; // Space between months
+      currentX += MONTH_LABEL_GAP; // Space between months
       return monthDays;
     })
     .join("");
@@ -142,32 +141,35 @@ const createDailyGrass = (total_at, year) => {
 
 const createWeeklyGrass = (total_at, year) => {
   // Show 52 weeks to 13*4 array
-  let currentX = 25;
-  let currentY = 55;
-  let dayCounter = 0;
-  // let year = "2023";
-  console.log("year :", year);
+  let currentX = START_X;
+  let currentY = START_Y;
 
   let weekLabels = Array.from({ length: 13 }, (_, i) => {
     return `
         <text x="${
           i < 9
-            ? 27 + currentX + i * GRASS_HORIZONTAL_INTERVAL
-            : 25 + currentX + i * GRASS_HORIZONTAL_INTERVAL
-          // 7 + currentX + i * (i < 9 ? GRASS_VERTICAL_INTERVAL : 14)
-        }" y="50" class="month-label">${i + 1}</text>
+            ? WEEK_LABEL_UNDER_10_BLANK +
+              currentX +
+              i * GRASS_HORIZONTAL_INTERVAL
+            : WEEK_LABEL_OVER_10_BLANK +
+              currentX +
+              i * GRASS_HORIZONTAL_INTERVAL
+        }" y="50" class="left-label">${i + 1}</text>
     `;
   }).join("");
 
   let dayLabels = Array.from({ length: 4 }, (_, i) => {
     return `
         <text x="30" y="${
-          MONTH_DEFAULT_VERTICAL_BLANK + currentY + i * GRASS_VERTICAL_INTERVAL
+          LEFT_LABEL_DEFAULT_VERTICAL_BLANK +
+          currentY +
+          i * GRASS_VERTICAL_INTERVAL
         }" class="day-label" text-anchor="middle">${i + 1}</text>
     `;
   }).join("");
 
   Date.prototype.getWeek = function () {
+    // get week number
     var onejan = new Date(this.getFullYear(), 0, 1);
     var today = new Date(this.getFullYear(), this.getMonth(), this.getDate());
     var dayOfYear = (today - onejan + 86400000) / 86400000;
@@ -187,11 +189,8 @@ const createWeeklyGrass = (total_at, year) => {
     let post_day = date_split[2];
 
     let d = new Date(post_year, post_month - 1, post_day);
-    console.log("d :", d);
-    console.log("d.getWeek()-1 :", d.getWeek());
     weekly_posts[d.getWeek()].push(total_at[k]);
   }
-  console.log("weekly_posts :", weekly_posts);
 
   let days = Array.from({ length: 13 }, (_, i) => {
     return Array.from({ length: 4 }, (_, j) => {
@@ -205,7 +204,7 @@ const createWeeklyGrass = (total_at, year) => {
         <rect 
           x="${25 + currentX + i * GRASS_HORIZONTAL_INTERVAL}" 
           y="${
-            GRASS_DEFAULT_VERTICAL_BLANK +
+            GRASS_DAILY_DEFAULT_VERTICAL_BLANK +
             currentY +
             j * GRASS_VERTICAL_INTERVAL
           }" 
@@ -244,7 +243,7 @@ const BlograssStyle = `
             fill: #343A40;
             animation: fadeInAnimation 0.8s ease-in-out forwards;
         }
-        .month-label { font-size: 12px; fill: #343A40; }
+        .left-label { font-size: 12px; fill: #343A40; }
         .day-label { font-size: 12px; fill: #343A40; }
         .writing { font-size: 12px; fill:#20C997; stroke: #20C997; }
         rect.day { fill: #cae3db; stroke: #cae3db; }
@@ -252,11 +251,6 @@ const BlograssStyle = `
 `;
 
 const createBlograssCard = (name, type, year, data) => {
-  // 발행일, 수정일 색 구분하여 표시해도 좋을 것 같다.
-
-  // console.log("최근 글 ", data);
-  // console.log("최근 글 갯수 ", data.posts.length);
-
   // get posts released_at, updated_at list
   const posts = data.posts;
   const released_at = posts.map((post) => post.released_at);
@@ -270,17 +264,16 @@ const createBlograssCard = (name, type, year, data) => {
 
   // 중복 제거
   total_at = [...new Set(total_at)];
-  console.log("total_at :", total_at);
 
   // 테두리 크기 조정
   let width = 0;
   let height = 0;
   if (type === "daily" || !type) {
-    width = 900;
-    height = 170;
+    width = DAILY_CARD_WIDTH;
+    height = DAILY_CARD_HEIGHT;
   } else if (type === "weekly") {
-    width = 300;
-    height = 130;
+    width = WEEKLY_CARD_WIDTH;
+    height = WEEKLY_CARD_HEIGHT;
   }
 
   const today = new Date();
