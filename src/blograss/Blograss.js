@@ -25,19 +25,21 @@ const WEEKLY_CARD_HEIGHT = 130; // 카드 높이
 const WEEK_LABEL_UNDER_10_BLANK = 27; // 주 라벨 10 미만 수평 공백
 const WEEK_LABEL_OVER_10_BLANK = 25; // 주 라벨 10 이상 수평 공백 (2자리 숫자로 간격이 달라짐)
 
-const createBlograssCardTitle = (username, type, year) => {
+const createBlograssCardTitle = (username, type, year, blogType) => {
   let type_text = "";
   if (type === "daily" || !type) {
     type_text = "Daily";
   } else if (type === "weekly") {
     type_text = "Weekly";
   }
-  const title_text = `🌱 ${year}년 Velog ${username} ${type_text} Grass`;
+  const title_text = `🌱 ${year}년 ${blogType} ${username} ${type_text} Grass`;
+
+  const blogURL = blogType === "naver" ? `https://blog.naver.com/${username}` : `https://velog.io/@${username}/posts`;
 
   return `
     <g data-testid="card-title" transform="translate(25, 22)">
         <g transform="translate(0, 0)">
-            <a href="https://velog.io/@${username}/posts">
+            <a href="${blogURL}">
                 <text x="0" y="0" class="header" data-testid="header">${title_text}</text>
             </a>
         </g>
@@ -250,7 +252,7 @@ const BlograssStyle = `
     </style>
 `;
 
-const createBlograssCard = (name, type, year, data) => {
+const createBlograssCard = (name, type, year, data, blogType) => {
   // get posts released_at, updated_at list
   const posts = data.posts;
   const released_at = posts.map((post) => post.released_at);
@@ -291,7 +293,7 @@ const createBlograssCard = (name, type, year, data) => {
             <rect data-testid="card-bg" x="0.5" y="0.5" rx="4.5" height="99%" stroke="#e4e2e2" width="${
               width - 1
             }" fill="#fffefe" stroke-opacity="1"/>
-            ${createBlograssCardTitle(name, type, year_check)}
+            ${createBlograssCardTitle(name, type, year_check, blogType)}
             ${createBlograssCardBody(total_at, type, year_check)}
         </svg>
     `;

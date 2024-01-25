@@ -68,3 +68,17 @@ https://blograss-weld.vercel.app/api?type=weekly&name=dev-smile&year=2023
 [![Blograss](https://blograss-weld.vercel.app/api?name=dev-smile&year=2023)](https://blograss-weld.vercel.app/api?name=dev-smile&year=2023)
 
 [![Blograss](https://blograss-weld.vercel.app/api?type=weekly&name=dev-smile&year=2023)](https://blograss-weld.vercel.app/api?type=weekly&name=dev-smile&year=2023)
+
+### 3-4. 블로그 유형 선택 (Beta)
+
+> Velog와 Naver 중 블로그 플랫폼을 선택할 수 있는 기능을 제공합니다. (베타 버전, 현재 조회 방식의 한계로 Naver는 최신 50개 글까지만 조회 가능)
+
+> 이 기능을 사용하려면, URL의 blogType 파라미터를 velog 또는 naver로 조정하세요
+
+```
+- Velog
+https://blograss-weld.vercel.app/api?name=dev-smile&blogType=velog
+
+- Naver
+https://blograss-weld.vercel.app/api?name=dev-smile&blogType=naver
+```
