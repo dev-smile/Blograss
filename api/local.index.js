@@ -19,6 +19,7 @@ router.get("/test", async (req, res) => {
           : await fetchPosts(name);
     return res.send(createGrass(name, type, year, post, blogType));
   } catch (e) {
+    console.log(e);
     return res.send(e.message);
   }
 })

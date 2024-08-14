@@ -1,2 +1,12 @@
-node_modules
+# Modules
+/node_modules
+
+# OS
+.DS_Store
+
+# env
+*.env
+
+# build
 .vercel
+dist

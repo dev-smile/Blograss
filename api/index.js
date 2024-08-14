@@ -9,12 +9,11 @@ export default async (req, res) => {
   // blogType=velog || naver
   const { name, type, year, blogType = "velog" } = req.query;
 
-  res.setHeader("Content-Type", "image/svg+xml");
-  try {
-    const post =
-      blogType === "naver"
-        ? await new NaverPostsFetcher(name).fetchPosts()
-        : await fetchPosts(name);
+    res.setHeader("Content-Type", "image/svg+xml");
+    try {
+        const post = blogType === "naver" 
+          ? await new NaverPostsFetcher(name).fetchPosts() 
+          : await fetchPosts(name);
 
     return res.send(createGrass(name, type, year, post, blogType));
   } catch (e) {
